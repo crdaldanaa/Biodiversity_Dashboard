@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "biodiversity-pipeline"
+version = "0.1.0"
+description = "Pipeline escalable para descarga, filtrado espacial con DuckDB y visualización de registros de GBIF."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "geopandas>=0.14.0",
+    "shapely>=2.0.0",
+    "pygbif>=0.6.4",
+    "duckdb>=1.0.0",
+    "pyarrow>=15.0.0",
+    "pyyaml>=6.0.1",
+    "python-dotenv>=1.0.1",
+    "streamlit>=1.35.0",
+    "plotly>=5.20.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]

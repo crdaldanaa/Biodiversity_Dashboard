@@ -1,0 +1,17 @@
+project:
+  name: "biodiversity_pipeline"
+  target_crs: "EPSG:4326"
+
+spatial:
+  simplify_tolerance: 0.005
+  max_wkt_length: 4000
+
+duckdb:
+  memory_limit: "8GB"
+  threads: 4
+  preserve_insertion_order: false
+
+paths:
+  raw_dir: "data/raw"
+  interim_dir: "data/interim"
+  processed_dir: "data/processed"

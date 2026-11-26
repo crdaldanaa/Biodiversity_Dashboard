@@ -1,0 +1,11 @@
+# Filtros adicionales aplicados en la solicitud asíncrona de GBIF
+# Documentación: https://techdocs.gbif.org/en/data-use/api-downloads
+predicates:
+  has_coordinate: true
+  has_geospatial_issue: false
+  occurrence_status: "PRESENT"
+  # Opcionales (dejar null o lista vacía si no aplica):
+  kingdom_keys: []          # Ej: [1] para Animalia, [6] para Plantae
+  year_start: 2020          # Ej: 2020
+  year_end: 2025          # Ej: 2025
+  max_coordinate_uncertainty_m: null  # Ej: 1000
