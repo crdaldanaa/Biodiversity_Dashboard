@@ -15,8 +15,8 @@ from app.queries import (
     load_top_species,
     load_yearly_trend,
 )
-st.set_page_config(page_title="Dashboard Biodiversidad GBIF", layout="wide")
-st.title("Explorador de Biodiversidad (GBIF + DuckDB Spatial)")
+st.set_page_config(page_title="Dashboard Biodiversidad Proyecto REDD+ SDM", layout="wide")
+st.title("Registros de Biodiversidad de la región del proyecto")
 
 processed_dir = Path("data/processed")
 parquet_files = sorted(
@@ -58,7 +58,7 @@ c4.metric("Datasets GBIF", f"{metrics['total_datasets']:,}")
 
 # Mapa espacial
 st.subheader("Distribución espacial de ocurrencias")
-df_map = load_map_points(selected_file, selected_kingdom, year_range, max_points=25000)
+df_map = load_map_points(selected_file, selected_kingdom, year_range, max_points=50000)
 if not df_map.empty:
     fig_map = px.scatter_map(
         df_map,

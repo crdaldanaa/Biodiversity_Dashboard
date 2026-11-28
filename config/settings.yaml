@@ -1,6 +1,9 @@
 project:
-  name: "biodiversity_pipeline"
+  name: "Proyecto REDD+ SDM"
   target_crs: "EPSG:4326"
+  # CRS métrico para áreas, grillas, AOO y EOO. EPSG:9377 = MAGNA-SIRGAS Origen Nacional (Colombia).
+  # Usa null para elegir automáticamente la zona UTM del centroide del área de interés.
+  metric_crs: "EPSG:9377"
 
 spatial:
   simplify_tolerance: 0.005
@@ -15,3 +18,85 @@ paths:
   raw_dir: "data/raw"
   interim_dir: "data/interim"
   processed_dir: "data/processed"
+  workspaces_dir: "data/workspaces"
+  reference_dir: "data/reference"
+  cache_dir: "data/cache"
+
+http:
+  cache_expire_days: 30
+  timeout_s: 30
+  max_workers: 8
+
+gbif:
+  api_base: "https://api.gbif.org/v1"
+  # Modo rápido: API de búsqueda paginada (máx. 100.000 por límite de GBIF).
+  fast_mode_max_records: 20000
+  media_country: "CO"
+
+sources:
+  res0126:
+    gbif_dataset_key: "09174029-d182-442c-a12f-8013aee328d7"
+    ipt_archive_url: "https://ipt.biodiversidad.co/sib/archive.do?r=especies-amenazadas-mads-2024"
+    doi: "10.15472/frowz3"
+  sib_catalog:
+    api_base: "https://api.catalogo.biodiversidad.co"
+  iucn:
+    # Opcional: si defines IUCN_TOKEN en .env se usa la API v4 (año de evaluación, criterios, tendencia).
+    # Sin token se usa la categoría IUCN que GBIF expone por especie.
+    api_base: "https://api.iucnredlist.org/api/v4"
+
+cleaning:
+  # Depuración previa a todos los análisis (paso `clean`). La descarga original se conserva en
+  # occurrences_raw.parquet: cambia estos criterios y vuelve a ejecutar clean,elevation,enrich,analyze.
+  exclude_basis: ["PRESERVED_SPECIMEN", "FOSSIL_SPECIMEN"]   # especímenes de museo y fósiles
+  require_year: true          # sin año → fuera
+  year_min: null
+  year_max: 2025              # el periodo termina en 2025 (2026 está incompleto)
+  drop_duplicates: true       # misma especie + coordenada + fecha → se conserva uno
+  # Incertidumbre mayor a este valor: el registro cuenta para riqueza y temporalidad, pero no para
+  # grilla, AOO/EOO, hotspots, elevación ni mapas. Sin incertidumbre reportada = válido.
+  spatial_max_uncertainty_m: 10000
+
+dem:
+  # Completa la elevación de cada registro. Por defecto Copernicus DEM GLO-30 (~30 m, abierto, AWS Open Data).
+  enabled: true
+  # Raster propio de mayor resolución (GeoTIFF en cualquier CRS), p. ej. ALOS PALSAR 12,5 m o DEM IGAC.
+  # Se usa primero; Copernicus completa donde no tenga datos. Ruta relativa a la raíz del proyecto.
+  local_path: null
+  # false: conserva la elevación reportada por el observador y solo completa las faltantes.
+  overwrite_reported: false
+
+analysis:
+  quality:
+    max_uncertainty_m: 10000
+    iqr_factor: 1.5
+    completeness_high: 80
+    completeness_medium: 40
+  temporal:
+    moving_average_window: 3
+    trend_years: 5
+  grid:
+    cell_size_m: auto   # o un valor en metros, p. ej. 1000
+    min_records_boxplot: 8
+  aoo_cell_m: 2000
+  danger_index:
+    weights:
+      amenaza: 0.50
+      densidad: 0.30
+      calidad: 0.20
+    # Fuente de categoría para el índice: la primera disponible de la lista.
+    threat_source_priority: ["res0126", "iucn"]
+    category_weights:
+      EX: 5.0
+      EW: 5.0
+      CR: 5.0
+      EN: 4.0
+      VU: 3.0
+      NT: 2.0
+      DD: 1.5
+      LC: 1.0
+      NE: 1.0
+
+api:
+  host: "127.0.0.1"
+  port: 8000

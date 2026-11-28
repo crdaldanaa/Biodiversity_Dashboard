@@ -16,6 +16,7 @@ def get_logger(name: str = "biodiversity_pipeline") -> logging.Logger:
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(formatter)
         logger.addHandler(console_handler)
+        logger.propagate = False
     return logger
 
 

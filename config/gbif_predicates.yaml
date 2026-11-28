@@ -6,6 +6,8 @@ predicates:
   occurrence_status: "PRESENT"
   # Opcionales (dejar null o lista vacía si no aplica):
   kingdom_keys: []          # Ej: [1] para Animalia, [6] para Plantae
-  year_start: 2020          # Ej: 2020
-  year_end: 2025          # Ej: 2025
+  # Por defecto se descargan TODOS los años: el periodo se filtra después en el mapa, el análisis,
+  # el catálogo y las fichas (selector "Periodo" de la barra superior).
+  year_start: null          # Ej: 2020
+  year_end: 2025            # El periodo termina en 2025
   max_coordinate_uncertainty_m: null  # Ej: 1000

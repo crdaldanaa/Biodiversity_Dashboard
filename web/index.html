@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%2319e3a6%22/%3E%3C/svg%3E">
+  <title>Biodiversity Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/app.css" />
+  <script src="https://unpkg.com/deck.gl@9.0.38/dist.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+</head>
+<body>
+  <!-- Fondo vivo: manchas de color que toman la paleta de la especie activa -->
+  <div class="aurora" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  </div>
+
+  <div class="shell">
+    <nav class="rail glass" aria-label="Navegación principal">
+      <a class="brand" href="#/areas" title="Inicio">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3c6 5 9 10 9 15a9 9 0 0 1-18 0c0-5 3-10 9-15z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 10v17M16 17l-5-4M16 21l5-4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      </a>
+      <a class="nav" data-view="areas" href="#/areas"><svg viewBox="0 0 24 24"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z M9 3v15 M15 6v15"/></svg><span>Áreas</span></a>
+      <a class="nav" data-view="map" href="#/map"><svg viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5z M3 12l9 5 9-5 M3 17l9 5 9-5"/></svg><span>Mapa 3D</span></a>
+      <a class="nav" data-view="analysis" href="#/analysis"><svg viewBox="0 0 24 24"><path d="M4 20V10 M10 20V4 M16 20v-7 M22 20H2"/></svg><span>Análisis</span></a>
+      <a class="nav" data-view="catalog" href="#/catalog"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z"/></svg><span>Catálogo</span></a>
+      <div class="rail-spacer"></div>
+      <button class="nav" id="themeToggle" type="button" title="Cambiar tema"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg><span>Tema</span></button>
+    </nav>
+
+    <div class="main">
+      <header class="topbar">
+        <div class="title-block">
+          <div class="eyebrow" id="projectName">Biodiversity Intelligence</div>
+          <h1 id="viewTitle">Áreas de interés</h1>
+        </div>
+        <div class="top-actions">
+          <label class="ws-select glass">
+            <span class="sr-only">Área de interés activa</span>
+            <select id="workspaceSelect"></select>
+          </label>
+          <div class="period-bar" id="periodBar" hidden></div>
+          <div class="status-chip glass" id="statusChip" hidden></div>
+        </div>
+      </header>
+      <main id="view" class="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div class="modal" id="speciesModal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <article class="modal-card" role="dialog" aria-modal="true" aria-labelledby="spTitle"></article>
+  </div>
+  <div class="tooltip glass" id="mapTooltip" hidden></div>
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
